@@ -1,16 +1,43 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/html">
+<html lang="de" xmlns:th="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <title>add new patient</title>
+    <title>Patient registrieren</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container" style="max-width: 720px; margin-top: 30px;">
+        <h1>Neuen Patienten registrieren</h1>
+        <p>
+            <a href="/">Start</a> |
+            <a href="/patient/list">Patientenliste</a> |
+            <a href="/reservation/add">Reservierung erfassen</a>
+        </p>
         <form th:action="@{/patient/add}" th:object="${patient}" method="post">
-            <input type="text" th:field="*{name}" class="form-control" placeholder="patient name">
-            birth date <input type="date" th:field="*{birth}" class="form-control">
-            <input type="submit" class="form-control" value="Save">
+            <div class="form-group">
+                <label for="socialInsuranceNumber">Sozialversicherungsnummer</label>
+                <input id="socialInsuranceNumber" type="text" th:field="*{socialInsuranceNumber}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="firstName">Vorname</label>
+                <input id="firstName" type="text" th:field="*{firstName}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Nachname</label>
+                <input id="lastName" type="text" th:field="*{lastName}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="gender">Geschlecht</label>
+                <select id="gender" th:field="*{gender}" class="form-control" required>
+                    <option value="">Bitte auswählen</option>
+                    <option th:each="gender : ${genders}" th:value="${gender}" th:text="${gender}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="birthDate">Geburtsdatum</label>
+                <input id="birthDate" type="date" th:field="*{birthDate}" class="form-control" required>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Patient speichern">
         </form>
     </div>
 </body>

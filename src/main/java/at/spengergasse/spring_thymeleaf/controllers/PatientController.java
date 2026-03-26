@@ -2,14 +2,13 @@ package at.spengergasse.spring_thymeleaf.controllers;
 
 import at.spengergasse.spring_thymeleaf.entities.Patient;
 import at.spengergasse.spring_thymeleaf.entities.PatientRepository;
+import at.spengergasse.spring_thymeleaf.entities.Gender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequestMapping("/patient")
@@ -29,6 +28,7 @@ public class PatientController {
     @GetMapping("/add")
     public String addPatient(Model model) {
         model.addAttribute("patient", new Patient());
+        model.addAttribute("genders", Gender.values());
         return "add_patient";
     }
 

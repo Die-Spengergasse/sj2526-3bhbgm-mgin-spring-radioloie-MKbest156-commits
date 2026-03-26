@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservierung erfassen</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container" style="max-width: 760px; margin-top: 30px;">
+    <h1>Reservierung erfassen</h1>
+    <p>
+        <a href="/">Start</a> |
+        <a href="/patient/add">Patient registrieren</a> |
+        <a href="/reservation/list">Reservierungsliste</a>
+    </p>
+
+    <div class="alert alert-warning" th:if="${#lists.isEmpty(patients)}">
+        Es ist noch kein Patient registriert. Bitte zuerst einen Patienten anlegen.
+    </div>
+
+    <form th:action="@{/reservation/add}" th:object="${reservation}" method="post" th:if="${!#lists.isEmpty(patients)}">
+        <div class="form-group">
+            <label for="patient">Patient</label>
+            <select id="patient" th:field="*{patientId}" class="form-control" required>
+                <option value="">Bitte auswählen</option>
+                <option th:each="patient : ${patients}" th:value="${patient.id}" th:text="${patient.displayName + ' (' + patient.socialInsuranceNumber + ')'}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="device">Gerät</label>
+            <select id="device" th:field="*{deviceId}" class="form-control" required>
+                <option value="">Bitte auswählen</option>
+                <option th:each="device : ${devices}" th:value="${device.id}" th:text="${device.id + ' - ' + device.deviceType + ' / Raum ' + device.roomNumber}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="startTime">Beginn</label>
+            <input id="startTime" type="datetime-local" th:field="*{startTime}" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="endTime">Ende</label>
+            <input id="endTime" type="datetime-local" th:field="*{endTime}" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="bodyRegion">Körperregion</label>
+            <select id="bodyRegion" th:field="*{bodyRegion}" class="form-control" required>
+                <option value="">Bitte auswählen</option>
+                <option th:each="bodyRegion : ${bodyRegions}" th:value="${bodyRegion}" th:text="${bodyRegion}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="comment">Kommentar</label>
+            <textarea id="comment" th:field="*{comment}" class="form-control" rows="4"></textarea>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Reservierung speichern">
+    </form>
+</div>
+</body>
+</html>

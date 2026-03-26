@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservierungsliste</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container" style="margin-top: 30px;">
+    <h1>Reservierungsliste pro Gerät</h1>
+    <p>
+        <a href="/">Start</a> |
+        <a href="/reservation/add">Neue Reservierung</a> |
+        <a href="/patient/add">Patient registrieren</a>
+    </p>
+
+    <form method="get" action="/reservation/list" class="form-inline" style="margin-bottom: 20px;">
+        <div class="form-group">
+            <label for="deviceId">Gerät&nbsp;</label>
+            <select id="deviceId" name="deviceId" class="form-control">
+                <option value="">Bitte auswählen</option>
+                <option th:each="device : ${devices}" th:value="${device.id}" th:text="${device.id + ' - ' + device.deviceType}" th:selected="${device.id == selectedDeviceId}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-default">Anzeigen</button>
+    </form>
+
+    <div class="alert alert-info" th:if="${selectedDeviceId == null || selectedDeviceId.isBlank()}">
+        Bitte wählen Sie ein Gerät aus.
+    </div>
+    <div class="alert alert-info" th:if="${selectedDeviceId != null && !selectedDeviceId.isBlank() && #lists.isEmpty(reservations)}">
+        Für dieses Gerät sind noch keine Reservierungen vorhanden.
+    </div>
+
+    <table class="table table-striped" th:if="${!#lists.isEmpty(reservations)}">
+        <thead>
+        <tr>
+            <th>Beginn</th>
+            <th>Ende</th>
+            <th>Patient</th>
+            <th>Körperregion</th>
+            <th>Kommentar</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="reservation : ${reservations}">
+            <td th:text="${#temporals.format(reservation.startTime, 'dd.MM.yyyy HH:mm')}"></td>
+            <td th:text="${#temporals.format(reservation.endTime, 'dd.MM.yyyy HH:mm')}"></td>
+            <td th:text="${reservation.patient.displayName}"></td>
+            <td th:text="${reservation.bodyRegion}"></td>
+            <td th:text="${reservation.comment}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
