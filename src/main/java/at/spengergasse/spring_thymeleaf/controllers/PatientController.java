@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+
 @Controller
 @RequestMapping("/patient")
 public class PatientController {
@@ -33,8 +34,27 @@ public class PatientController {
     }
 
     @PostMapping("/add")
-    public String addPatient(@ModelAttribute("patient") Patient patient) {
+    public String addPatient(@ModelAttribute("patient") Patient patient, Model model) {
+
+        if (patient.getBirthDate() != null &&
+                patient.getBirthDate().isAfter(java.time.LocalDate.now())) {
+
+            model.addAttribute("error",
+                    "Das Geburtsdatum darf nicht in der Zukunft liegen.");
+            model.addAttribute("genders", Gender.values());
+            return "add_patient";
+        }
+
+        String svnr = patient.getSocialInsuranceNumber();
+
+        if (svnr == null || !svnr.matches("\\d{10}")) {
+            model.addAttribute("error",
+                    "Ungültige Sozialversicherungsnummer. Es müssen genau 10 Ziffern eingegeben werden.");
+            model.addAttribute("genders", Gender.values());
+            return "add_patient";
+        }
+
         patientRepository.save(patient);
-        return  "redirect:/patient/list";
+        return "redirect:/patient/list";
     }
 }
